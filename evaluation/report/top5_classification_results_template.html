@@ -1,0 +1,21 @@
+<b>{{ title }}</b>
+<table>
+  <tr>
+    <th>#</th>
+    <th>Activity</th>
+    <th>Score</th>
+  </tr>
+{% for classification_result in classification_results %}
+  <tr>
+    {% if classification_result['number'] == other_model_prediction_num %}
+      <td><b>{{classification_result['number']}}</b></td>
+      <td><b>{{classification_result['label']}}</b></td>
+      <td><b>{{'%.4f' % classification_result['score']}}</b></td>
+    {% else %}
+      <td>{{classification_result['number']}}</td>
+      <td>{{classification_result['label']}}</td>
+      <td>{{'%.10f' % classification_result['score']}}</td>
+    {% endif %}
+  </tr>
+{% endfor %}
+</table>

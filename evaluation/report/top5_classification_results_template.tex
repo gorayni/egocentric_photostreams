@@ -1,0 +1,13 @@
+{{title}}
+\begin{tabular}{ | c | c | c |}
+\hline
+\textbf{ # } & \textbf{Activity}  & \textbf{Score} \\ \hline
+{% for classification_result in classification_results %}
+    {% if classification_result['number'] == other_model_prediction_num %}
+      \textbf{ {{classification_result['number']}}} & \textbf{ {{classification_result['label']}}} & \textbf{ {{'%.4f' % classification_result['score']}}} \\ \hline
+    {% else %}
+      {{classification_result['number']}} & {{classification_result['label']}} & {{'%.4f' % classification_result['score']}} \\ \hline
+    {% endif %}
+
+{% endfor %}
+\end{tabular}

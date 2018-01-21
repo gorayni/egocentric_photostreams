@@ -1,0 +1,7 @@
+\begin{tabular}{ | l | {% for m in model_names %}c |{% endfor %}}
+\hline
+\multirow{2}{*}{\textbf{Activity}}{% for model_name in model_names %} & \multirow{2}{*}{\textbf{ {{model_name}}}}{% endfor %} \\
+{% for model_name in model_names %} & {% endfor %} \\ \hline
+{% for label in labels %}{{label}}{% for model_name in model_names %} & {% if models[model_name]['recall'][label]['mean'] == max_rows[label] %} \textbf{ {{'%.2f' % (100.0 * models[model_name]['recall'][label]['mean'])}}} {% else %}{{'%.2f' % (100.0 * models[model_name]['recall'][label]['mean'])}}{% endif %}{% endfor %} \\ \hline {% endfor %} \noalign{\vskip 0.25cm} \hline
+{% for metric in  metrics%} \textbf{ {{metric_formatted_names[metric]}}}{% for model_name in model_names %} & {% if models[model_name][metric]['mean'] == max_rows[metric] %} \textbf{ {{'%.2f' % (100.0 * models[model_name][metric]['mean'])}}} {% else %} {{'%.2f' % (100.0 * models[model_name][metric]['mean'])}} {% endif %} {% endfor %} \\ \hline {% endfor %}
+\end{tabular}

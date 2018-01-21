@@ -1,0 +1,3 @@
+[submodule "brightside"]
+	path = brightside
+	url = https://github.com/gorayni/brightside.git

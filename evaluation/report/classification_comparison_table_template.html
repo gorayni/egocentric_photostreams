@@ -1,0 +1,35 @@
+<table border="1" cellpadding="0" cellspacing="1">
+
+	<tr>
+		<td><b>Activity</b></td>
+		{% for model_name in model_names %}
+			<td><b>{{model_name}}</b></td>
+		{% endfor %}
+	</tr>
+
+	{% for label in labels %}
+	<tr>
+		<td>{{label}}</td>
+		{% for model_name in model_names %}
+		    {% if models[model_name]['recall'][label]['mean'] == max_rows[label] %}
+        		<td><b>{{'%.2f' % (100.0 * models[model_name]['recall'][label]['mean'])}}</b></td>
+        	{% else %}
+        		<td>{{'%.2f' % (100.0 * models[model_name]['recall'][label]['mean'])}}</td>
+    		{% endif %}
+		{% endfor %}
+	</tr>
+	{% endfor %}
+
+	{% for metric in  metrics%}
+	<tr>
+		<td><b>{{metric_formatted_names[metric]}}</b></td>
+		{% for model_name in model_names %}
+		    {% if models[model_name][metric]['mean'] == max_rows[metric] %}
+        		<td><b>{{'%.2f' % (100.0 * models[model_name][metric]['mean'])}}</b></td>
+        	{% else %}
+        		<td>{{'%.2f' % (100.0 * models[model_name][metric]['mean'])}}</td>
+    		{% endif %}
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</table>
