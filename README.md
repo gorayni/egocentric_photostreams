@@ -13,8 +13,7 @@ This repository contains the code used in
 
 ### Contents
 1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Downloads](#downloads)
+2. [Static Image Classification](#static)
 
 ### Installation
 
