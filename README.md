@@ -14,6 +14,7 @@ This repository contains the code used in
 ### Contents
 1. [Installation](#installation)
 2. [Static Image Classification](#static)
+3. [Downloads](#downloads)
 
 ### Installation
 
@@ -27,9 +28,9 @@ This repository contains the code used in
 
 4. Split the data by executing the *Dataset split* notebook. This will create the cross-validation splits in the directory *data*.
 
-## Static Image Classification
+### Static Image Classification
 
-### Training
+#### Training
 
 Once the dataset was split, then the models can be trained by
 
@@ -49,7 +50,7 @@ python training/train_cnn.py --network=inceptionV3 --data_dir=data/static --weig
 python training/train_rf.py --network=inceptionV3 --data_dir=data/static --weights_dir=weights/inceptionV3 -l 'global_average_pooling2d_1' 
 ```
 
-### Testing
+#### Testing
 
 ```bash
 python testing/test_cnn.py --network=vgg-16 --data_dir=data/static --results_dir=results/vgg-16 --weights_dir=weights/vgg-16 
@@ -68,3 +69,10 @@ python testing/test_cnn.py --network=inceptionV3 --data_dir=data/static --result
 python testing/test_rf.py --network=inceptionV3 --data_dir=data/static --results_dir=results/inceptionV3 --weights_dir=weights/inceptionV3 -l 'global_average_pooling2d_1'
 
 ```
+### Downloads
+
+1. VGG-16 [CNN weights](https://drive.google.com/open?id=1BFivA-sx1WugxfRCuAVgiD7qXccekgSV) [RF (on FC1)](https://drive.google.com/open?id=1uCyhFg2LAkCeHjMqJ7sOFy8ljEgjltdi) 
+
+2. ResNet [CNN weights](https://drive.google.com/open?id=15wZ2oMj8MDjcLODDs7cdxnYjr7JVp6vA) [RF](https://drive.google.com/open?id=1lU1Sz53MTD3xoPwU3-F_z0GT3GvDfP_L) 
+
+3. InceptionV3 [CNN weights](https://drive.google.com/open?id=1YOwg39Q6eWklBg17K_B15qfMjL6hAvWt) [RF]()
