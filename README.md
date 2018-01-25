@@ -77,4 +77,4 @@ python testing/test_rf.py --network=inceptionV3 --data_dir=data/static --results
 
 2. ResNet [[CNN weights]](https://drive.google.com/open?id=15wZ2oMj8MDjcLODDs7cdxnYjr7JVp6vA) [[RF]](https://drive.google.com/open?id=1lU1Sz53MTD3xoPwU3-F_z0GT3GvDfP_L) 
 
-3. InceptionV3 [[CNN weights]](https://drive.google.com/open?id=1YOwg39Q6eWklBg17K_B15qfMjL6hAvWt) [RF]()
+3. InceptionV3 [[CNN weights]](https://drive.google.com/open?id=1YOwg39Q6eWklBg17K_B15qfMjL6hAvWt) [[RF]](https://drive.google.com/open?id=1-GVeSnSETMqFrBr1KPSzJoHbJbqDPEVh)
