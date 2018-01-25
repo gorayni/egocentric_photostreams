@@ -71,8 +71,10 @@ python testing/test_rf.py --network=inceptionV3 --data_dir=data/static --results
 ```
 ### Downloads
 
-1. VGG-16 [CNN weights](https://drive.google.com/open?id=1BFivA-sx1WugxfRCuAVgiD7qXccekgSV) [RF (on FC1)](https://drive.google.com/open?id=1uCyhFg2LAkCeHjMqJ7sOFy8ljEgjltdi) 
+#### Static Image Classification
 
-2. ResNet [CNN weights](https://drive.google.com/open?id=15wZ2oMj8MDjcLODDs7cdxnYjr7JVp6vA) [RF](https://drive.google.com/open?id=1lU1Sz53MTD3xoPwU3-F_z0GT3GvDfP_L) 
+1. VGG-16 [[CNN weights]](https://drive.google.com/open?id=1BFivA-sx1WugxfRCuAVgiD7qXccekgSV) [[RF (on FC1)]](https://drive.google.com/open?id=1uCyhFg2LAkCeHjMqJ7sOFy8ljEgjltdi) 
 
-3. InceptionV3 [CNN weights](https://drive.google.com/open?id=1YOwg39Q6eWklBg17K_B15qfMjL6hAvWt) [RF]()
+2. ResNet [[CNN weights]](https://drive.google.com/open?id=15wZ2oMj8MDjcLODDs7cdxnYjr7JVp6vA) [[RF]](https://drive.google.com/open?id=1lU1Sz53MTD3xoPwU3-F_z0GT3GvDfP_L) 
+
+3. InceptionV3 [[CNN weights]](https://drive.google.com/open?id=1YOwg39Q6eWklBg17K_B15qfMjL6hAvWt) [RF]()
