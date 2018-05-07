@@ -158,6 +158,8 @@ def get_sequences(users, max_minute_separation=5):
 def get_training_batches(training_set, sequences, timestep=10):
     batches = list()
     for user_id, date in training_set:
+        if user_id == 'u3' and date== '2015-06-21':
+            continue
         for seq in sequences[user_id][date]:
             if seq.end - seq.start > timestep:
                 num_windows = seq.end - seq.start - timestep + 1
@@ -176,7 +178,9 @@ def get_training_batches(training_set, sequences, timestep=10):
 def get_batches(split_set, sequences, timestep=10, overlap=0, include_last=False):
     batches = list()
     non_overlapping = timestep - overlap
-    for user_id, date in split_set:
+    for user_id, date in split_set:        
+        if user_id == 'u3' and date== '2015-06-21':
+            continue
         for s in sequences[user_id][date]:
             end_ind = (int((s.end - s.start - timestep) / non_overlapping) + 1) * non_overlapping + s.start
 

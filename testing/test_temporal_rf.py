@@ -2,8 +2,8 @@ from __future__ import division
 
 import os
 
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
+# os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 from keras import backend as K
 from easydict import EasyDict as edict
@@ -12,7 +12,7 @@ import os
 import experiments as exp
 import utils.gpu
 import argparse
-from test_rf import test
+from test_rf import test_on_cnn
 
 
 def parse_args():
@@ -91,4 +91,4 @@ if __name__ == '__main__':
     results_dir = os.path.join(args.results_dir, cnn_model.name)
     utils.makedirs(results_dir)
 
-    test(args.data_dir, results_dir, cnn_model, rf_model, args.start_fold, args.end_fold, args.progress_percent)
+    test_on_cnn(args.data_dir, results_dir, cnn_model, rf_model, args.start_fold, args.end_fold, args.progress_percent)

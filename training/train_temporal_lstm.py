@@ -2,8 +2,8 @@ from __future__ import division
 
 import os
 
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
+# os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 import numpy as np
 
@@ -150,6 +150,9 @@ def parse_args():
     parser.add_argument('--iccv_epic', dest='iccv_epic',
                         help='ICCV Epic split',
                         default=False, type=bool)
+    parser.add_argument('-l', '--layer', dest='layers',
+                        help='Layers to be extracted for the Random Forest training',
+                        required=True, nargs='+', type=str)
     return parser.parse_args()
 
 
@@ -161,6 +164,9 @@ if __name__ == '__main__':
         import keras.backend.tensorflow_backend as KTF
 
         KTF.set_session(utils.gpu.get_session(args.gpu_fraction))
+        backend = 'tf'
+    else:
+        backend = 'th'
 
     weights_dir = os.path.join(args.weights_dir, args.model)
 
@@ -169,30 +175,29 @@ if __name__ == '__main__':
         sgd_params = edict({'lr': lr, 'decay': 0.000005, 'momentum': 0.9, 'nesterov': True})
 
         model = edict({'base_model': 'vgg-16',
-                       'name': 'vgg-16+LSTM.lr_' + str(
+                       'name': 'vgg-16+LSTM.RF.layers_' + '_'.join(args.layers) +'.lr_' + str(
                            lr) + '.batch_size_' + str(args.batch_size) + '.timestep_' + str(args.timestep),
                        'feature_vector_length': 21,
                        'load': exp.probabilities_plus_lstm})
-        features_fname = 'features.vgg-16.RF.layers_fc1.fold_{}.tf.pkl'
     elif args.model == 'resNet50':
         lr = args.learning_rate if args.learning_rate else 0.0001
         sgd_params = edict({'lr': lr, 'decay': 0.000005, 'momentum': 0.9, 'nesterov': True})
 
         model = edict({'base_model': 'resNet50',
-                       'name': 'resNet50+LSTM.lr_' + str(
+                       'name': 'resNet50+LSTM.RF.layers_' + '_'.join(args.layers) +'.lr_' + str(
                            lr) + '.batch_size_' + str(args.batch_size) + '.timestep_' + str(args.timestep),
-                       'feature_vector_length': 2048,
-                       'load': exp.resNet50features_plus_lstm})
-        features_fname = 'features.' + model.base_model + '.fold_{}.pkl'
-    elif args.network == 'inceptionV3':
+                       'feature_vector_length': 21,
+                       'load': exp.probabilities_plus_lstm})
+    elif args.model == 'inceptionV3':
         lr = args.learning_rate if args.learning_rate else 0.00001
         sgd_params = edict({'lr': lr, 'decay': 0.000005, 'momentum': 0.9, 'nesterov': True})
         model = edict({'base_model': 'inceptionV3',
-                       'name': 'inceptionV3+LSTM.lr_' + str(
+                       'name': 'inceptionV3+LSTM.RF.layers_' + '_'.join(args.layers) + '.lr_' + str(
                            lr) + '.batch_size_' + str(args.batch_size) + '.timestep_' + str(args.timestep),
-                       'feature_vector_length': 2048,
-                       'load': exp.inceptionV3_first_phase_model})
-        features_fname = 'features.' + model.base_model + '.fold_{}.pkl'
+                       'feature_vector_length': 21,
+                       'load': exp.probabilities_plus_lstm})
+
+    features_fname = 'features.' + model.base_model + '.RF.layers_' + '_'.join(args.layers) + '.fold_{}.' + backend + '.pkl'
     features_filepath = os.path.join(args.features_dir, model.base_model, features_fname)
 
     utils.makedirs(weights_dir)

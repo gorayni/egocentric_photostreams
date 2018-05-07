@@ -157,12 +157,12 @@ def inceptionV3features_plus_lstm(feature_vector_length=2048, weights=None, time
     return model
 
 
-def probabilities_plus_lstm(feature_vector_length=21, weights=None, batch_size=10, timestep=10):
+def probabilities_plus_lstm(feature_vector_length=21, weights=None, batch_size=1, timestep=10, stateful=True):
 
     model = Sequential(name='probabilities_features+lstm');
     # Classification block
-    model.add(TimeDistributed(Dropout(0.5), input_shape=(timestep, feature_vector_length)))
-    model.add(LSTM(32, name='lstm1', return_sequences=True))
+    model.add(TimeDistributed(Dropout(0.5), batch_input_shape=(batch_size, timestep, feature_vector_length)))
+    model.add(LSTM(32, name='lstm1', return_sequences=True, stateful=stateful))
     model.add(TimeDistributed(Dense(21, activation='softmax'), name='predictions'))
 
     if weights:

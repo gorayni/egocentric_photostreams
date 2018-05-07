@@ -85,7 +85,7 @@ def train(data_dir, weights_dir, sgd_params, base_model, start_fold=None, end_fo
         steps_per_epoch = num_images_fits_batch(train_dir, batch_size)
         validation_steps = num_images_fits_batch(val_dir, batch_size)
 
-        if not class_weights:
+        if class_weights:
             class_weights = compute_class_weights(train_dir)
 
         # fine-tune the model

@@ -84,7 +84,7 @@ def features_from_users(users, fold_dir):
     return np.asarray(features), np.asarray(targets)
 
 
-def train_random_forest(n_estimators, dst_filepath=None, model=None, generator=None, users=None, fold_dir=None, cores=None, progress_percent=0.05):
+def train_random_forest(n_estimators, max_depth, dst_filepath=None, model=None, generator=None, users=None, fold_dir=None, cores=None, progress_percent=0.05):
 
     if model and generator:
         features, targets = features_from_cnn(model, generator, progress_percent)
@@ -93,7 +93,8 @@ def train_random_forest(n_estimators, dst_filepath=None, model=None, generator=N
 
     if not cores:
         cores = multiprocessing.cpu_count()
-    random_forest = RandomForestClassifier(n_estimators=n_estimators, n_jobs=cores)
+    random_forest = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, n_jobs=cores)
+    features = np.squeeze(features)
     random_forest.fit(features, targets)
 
     if dst_filepath:

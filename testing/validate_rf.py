@@ -2,8 +2,8 @@ from __future__ import division
 
 import os
 
-# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
-# os.environ["CUDA_VISIBLE_DEVICES"] = ""
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator
@@ -93,6 +93,52 @@ def test_on_cnn(data_dir, results_dir, cnn_model, rf_model, start_fold=None, end
             K.clear_session()
 
 
+def test_on_features_original(data_dir, results_dir, features_filepath, rf_model, start_fold=None, end_fold=10, progress_percent=.01, num_estimators=None):
+
+    backend = 'tf' if K.backend() == 'tensorflow' else 'th'
+    if not start_fold:
+        start_fold = current_fold(results_dir, rf_model.name + '.fold')
+
+    folds = [str(fold).zfill(2) for fold in range(start_fold, end_fold + 1)]
+    for fold in folds:
+
+        print "Testing fold {} on layers {}".format(fold, ", ".join(rf_model.layers))
+        weights = rf_model.weights.format(fold)
+        rf = load_random_forest(weights)
+
+        test_dir = os.path.join(data_dir, fold, 'validation')
+
+        with open(features_filepath.format(fold), 'r') as f:
+            users = pickle.load(f)
+        ind_by_img_path = get_images_indices(users)
+
+        images = list()
+        for image in images_from_fold_dir(test_dir):
+            images.append(image)
+
+        num_test_images = len(images)
+        test_progress_percent = int(num_test_images * progress_percent)
+
+        results = list()
+        for i, (user_id, date, relative_path) in enumerate(images):
+            ind = ind_by_img_path[relative_path]
+            features = users[user_id][date].images[ind].features
+            label = users[user_id][date].images[ind].label
+            prediction = rf.predict(features)[0].astype(np.int)
+
+            results.append((relative_path, label, prediction))
+            if progress_percent and (i + 1) % test_progress_percent == 0:
+                print("Progress %3.2f%% (%d/%d)" % ((i + 1) / num_test_images * 100, i + 1, num_test_images))
+
+
+        if num_estimators is None:
+            results_fname = "validation.{}.fold_{}.{}.csv".format(rf_model.name, fold, backend)
+        else:
+            results_fname = "validation.{}.num_estimators_{}.fold_{}.{}.csv".format(rf_model.name, num_estimators, fold, backend)
+
+        results_filepath = os.path.join(results_dir, results_fname)
+        write_results(results, results_filepath)
+
 def test_on_features(data_dir, results_dir, features_filepath, rf_model, start_fold=None, end_fold=10, progress_percent=.01, num_estimators=None):
 
     backend = 'tf' if K.backend() == 'tensorflow' else 'th'
@@ -106,7 +152,7 @@ def test_on_features(data_dir, results_dir, features_filepath, rf_model, start_f
         weights = rf_model.weights.format(fold)
         rf = load_random_forest(weights)
 
-        test_dir = os.path.join(data_dir, fold, 'test')
+        test_dir = os.path.join(data_dir, fold, 'validation')
 
         with open(features_filepath.format(fold), 'r') as f:
             users = pickle.load(f)
@@ -139,9 +185,9 @@ def test_on_features(data_dir, results_dir, features_filepath, rf_model, start_f
             results.append((relative_path, label, predictions[i]))
 
         if num_estimators is None:
-            results_fname = "{}.fold_{}.{}.csv".format(rf_model.name, fold, backend)
+            results_fname = "validation.{}.fold_{}.{}.csv".format(rf_model.name, fold, backend)
         else:
-            results_fname = "{}.num_estimators_{}.fold_{}.{}.csv".format(rf_model.name, num_estimators, fold, backend)
+            results_fname = "validation.{}.num_estimators_{}.fold_{}.{}.csv".format(rf_model.name, num_estimators, fold, backend)
 
         results_filepath = os.path.join(results_dir, results_fname)
         write_results(results, results_filepath)
@@ -182,9 +228,6 @@ def parse_args():
     parser.add_argument('--num_estimators', dest='num_estimators',
                         help='Number of estimators for Random Forest',
                         default=None, type=int)
-    parser.add_argument('--max_depth', dest='max_depth',
-                        help='max_depth',
-                        default=None, type=int)
     return parser.parse_args()
 
 
@@ -224,37 +267,17 @@ if __name__ == '__main__':
              'img_height': 299,
              'load': exp.inceptionV3_second_phase_model})
 
-
     if args.num_estimators is None:
-        if args.max_depth:
-            weights = weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.max_depth_' + str(args.max_depth) + ".fold_{}.pkl"
-        else:
-            weights = weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + ".fold_{}.pkl"
+        weights = weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + ".fold_{}.pkl"
     else:
-        if args.max_depth:
-            weights = weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.max_depth_' + str(args.max_depth) + ".num_estimators_" + str(args.num_estimators) + ".fold_{}.pkl"
-        else:
-            weights = weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + ".num_estimators_" + str(args.num_estimators) + ".fold_{}.pkl"
+        weights = weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + ".num_estimators_" + str(args.num_estimators) + ".fold_{}.pkl"
 
-
-    if args.num_estimators is None:
-        if args.max_depth:
-            rf_model_name = cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.max_depth_' + str(args.max_depth)
-        else:
-            rf_model_name = cnn_model.name + '.RF.layers_' + '_'.join(args.layers)
-    else:
-        if args.max_depth:
-            rf_model_name = cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.max_depth_' + str(args.max_depth) + '.num_estimators_' + str(args.num_estimators)
-        else:
-            rf_model_name = cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.num_estimators_' + str(args.num_estimators)
-
-    rf_model = edict({'num_estimators': args.num_estimators,
-                  'max_depth': args.max_depth,
-                  'weights': weights,
-                  'name': rf_model_name,
-                  'layers': args.layers})
+    rf_model = edict({'name': cnn_model.name + '.RF.layers_' + '_'.join(args.layers),
+                      'weights': weights,
+                      'layers': args.layers})
 
     utils.makedirs(results_dir)
+
     if args.features_filepath:
         test_on_features(args.data_dir, results_dir, args.features_filepath, rf_model, args.start_fold, args.end_fold, args.progress_percent, args.num_estimators)
     else:

@@ -273,7 +273,7 @@ if __name__ == '__main__':
         if args.weights_filename:
             weights = os.path.join(weights_dir, args.weights_filename)
         else:
-            weights = weights_dir + '/weights.resNet50.best.tf.hdf5'
+            weights = weights_dir + '/weights.resNet50.phase_2.fold_{}.best.tf.hdf5'
 
         cnn_model = edict(
             {'weights': weights,
@@ -302,7 +302,7 @@ if __name__ == '__main__':
         extract_cnn_features(cnn_model, args.layer, features_dir)
     elif args.features_type == 'rf':
         rf_model = edict({'num_estimators': args.num_estimators,
-                          'weights': weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + args.layer + '.fold_{}.pkl',
+                          'weights': weights_dir + "/weights." + cnn_model.name + '.RF.layers_' + args.layer + ".num_estimators_" + str(args.num_estimators) + '.fold_{}.pkl',
                           'name': cnn_model.name + '.RF.layers_' + args.layer,
                           'layer': args.layer})
         extract_rf_features(args.data_dir, features_dir, cnn_model, rf_model, args.start_fold, args.end_fold)

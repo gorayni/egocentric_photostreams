@@ -49,7 +49,7 @@ def train_on_features(data_dir, weights_dir, features_filepath, rf_model, start_
             features = pickle.load(f)
 
         weights_filepath = os.path.join(weights_dir, "weights." + rf_model.name + ".fold_" + fold + ".pkl")
-        train_random_forest(rf_model.num_estimators, weights_filepath, users=features, fold_dir=train_dir)
+        train_random_forest(rf_model.num_estimators, rf_model.max_depth, weights_filepath, users=features, fold_dir=train_dir)
 
 
 def train_on_cnn(data_dir, weights_dir, cnn_model, rf_model, start_fold=None, end_fold=10):
@@ -78,8 +78,8 @@ def train_on_cnn(data_dir, weights_dir, cnn_model, rf_model, start_fold=None, en
                                                             class_mode='categorical',
                                                             batch_size=1)
 
-        weights_filepath = os.path.join(weights_dir, "weights." + rf_model.name + ".fold_" + fold + ".pkl")
-        train_random_forest(rf_model.num_estimators, weights_filepath, model, train_generator)
+        weights_filepath = os.path.join(weights_dir, "weights." + ".fold_" + fold + ".pkl")
+        train_random_forest(rf_model.num_estimators, rf_model.max_depth, weights_filepath, model, train_generator)
 
         del model
         if K.backend() == 'tensorflow':
@@ -112,6 +112,9 @@ def parse_args():
     parser.add_argument('--features_filepath', dest='features_filepath',
                         help='Features filepath string',
                         default=None, type=str)
+    parser.add_argument('--max_depth', dest='max_depth',
+                        help='max_depth',
+                        default=None, type=int)
     parser.add_argument('-l', '--layer', dest='layers',
                         help='Layers to be extracted for the Random Forest training',
                         required=True, nargs='+', type=str)
@@ -121,10 +124,6 @@ def parse_args():
 if __name__ == '__main__':
 
     args = parse_args()
-
-    if K.backend() == 'tensorflow':
-        import keras.backend.tensorflow_backend as KTF
-        KTF.set_session(utils.gpu.get_session(args.gpu_fraction))
 
     weights_dir = os.path.realpath(args.weights_dir)
     weights_dir = os.path.join(weights_dir, args.network)
@@ -148,13 +147,21 @@ if __name__ == '__main__':
                        'img_height': 224,
                        'load': exp.resNet50_second_phase})
 
+    if args.max_depth:
+        rf_model_name = cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.max_depth_' + str(args.max_depth) + '.num_estimators_' + str(args.num_estimators)
+    else:
+        rf_model_name = cnn_model.name + '.RF.layers_' + '_'.join(args.layers) + '.num_estimators_' + str(args.num_estimators)
     rf_model = edict({'num_estimators': args.num_estimators,
-                      'name': cnn_model.name + '.RF.layers_' + '_'.join(args.layers),
+                      'max_depth': args.max_depth,
+                      'name': rf_model_name,
                       'layers': args.layers})
 
-    utils.makedirs(args.weights_dir)
+    utils.makedirs(weights_dir)
 
     if args.features_filepath:
         train_on_features(args.data_dir, weights_dir, args.features_filepath, rf_model, args.start_fold, args.end_fold)
     else:
+        if K.backend() == 'tensorflow':
+            import keras.backend.tensorflow_backend as KTF
+            KTF.set_session(utils.gpu.get_session(args.gpu_fraction))
         train_on_cnn(args.data_dir, weights_dir, cnn_model, rf_model, args.start_fold, args.end_fold)

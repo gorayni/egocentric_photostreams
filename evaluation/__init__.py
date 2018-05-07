@@ -18,7 +18,7 @@ class Metrics(object):
 
 
 class Fold(Metrics):
-    def __init__(self, number, img_filepaths, groundtruth, predictions, probabilities, num_categories=21):
+    def __init__(self, number, img_filepaths, groundtruth, predictions, probabilities, num_categories=21, num_estimators=None):
         super(Fold, self).__init__()
         self.number = number
         self.img_filepaths = img_filepaths
@@ -26,6 +26,7 @@ class Fold(Metrics):
         self.probabilities = probabilities
         self.predictions = predictions
         self.num_categories = num_categories
+        self.num_estimators = num_estimators
 
     def evaluate(self):
         self.accuracy = metrics.accuracy_score(self.groundtruth, self.predictions)
