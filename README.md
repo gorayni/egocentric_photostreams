@@ -16,10 +16,6 @@ If you use this code or its database, please consider citing:
 		title="Batch-based activity recognition from egocentric photo-streams revisited",
 		journal="Pattern Analysis and Applications",
 		year="2018",
-		month="May",
-		day="05",
-		doi="10.1007/s10044-018-0708-1",
-		url="https://doi.org/10.1007/s10044-018-0708-1"
 	}
 ### Contents
 1. [Installation](#installation)
