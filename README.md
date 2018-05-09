@@ -2,15 +2,25 @@
 
 ### Introduction
 
-This repository contains the code used in
+This repository contains the code used in the paper [Batch-Based Activity Recognition From Egocentric Photo-Streams Revisited](https://link.springer.com/article/10.1007%2Fs10044-018-0708-1)
 
-    @article{paa2017,
-       author = {A. Cartas and J. Marin and P. Radeva and M. Dimiccoli},
-       title = {Recognizing Daily Activities from Egocentric Photo-Streams},
-       journal = {ArXiv e-prints},
-       year = 2017
-    }
+<center><img src="cnn+rf.png" height="185"></img></center>
 
+If you use this code or its database, please consider citing:
+
+	@Article{paa2018,
+		author="Cartas, Alejandro
+		and Mar{\'i}n, Juan
+		and Radeva, Petia
+		and Dimiccoli, Mariella",
+		title="Batch-based activity recognition from egocentric photo-streams revisited",
+		journal="Pattern Analysis and Applications",
+		year="2018",
+		month="May",
+		day="05",
+		doi="10.1007/s10044-018-0708-1",
+		url="https://doi.org/10.1007/s10044-018-0708-1"
+	}
 ### Contents
 1. [Installation](#installation)
 2. [Static Image Classification](#static)
