@@ -218,7 +218,7 @@ if __name__ == '__main__':
 
             lr = args.learning_rate if args.learning_rate else 0.001
             sgd_params = edict({'lr': lr, 'decay': 0.000005, 'momentum': 0.9, 'nesterov': True, 'batch_size': args.batch_size})
-            model = edict({'init_weights': 'imagenet',
+            model = edict({'init_weights': init_weights,
                            'name': 'resNet50.lr_' + str(lr),
                            'img_width': 224,
                            'img_height': 224,
