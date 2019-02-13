@@ -77,6 +77,12 @@ python testing/test_rf.py --network=inceptionV3 --data_dir=data/static --results
 ```
 ### Downloads
 
+#### Dataset
+
+The NTCIR-12 photos are available on the official [website](http://ntcir-lifelog.computing.dcu.ie/NTCIR12/).
+
+Our [annotations](https://github.com/gorayni/egocentric_photostreams/blob/master/datasets/ntcir/annotations.txt) and [categories](https://github.com/gorayni/egocentric_photostreams/blob/master/datasets/ntcir/categories.txt) are available in the *datasets/ntcir* directory of this repository.
+
 #### Static Image Classification
 
 1. VGG-16 [[CNN weights]](https://drive.google.com/open?id=1BFivA-sx1WugxfRCuAVgiD7qXccekgSV) [[RF (on FC1)]](https://drive.google.com/open?id=1uCyhFg2LAkCeHjMqJ7sOFy8ljEgjltdi) 
