@@ -79,7 +79,7 @@ python testing/test_rf.py --network=inceptionV3 --data_dir=data/static --results
 
 #### Dataset
 
-The NTCIR-12 photos are available on the official [website](http://ntcir-lifelog.computing.dcu.ie/NTCIR12/).
+The NTCIR-12 dataset is available [here](http://ntcir-lifelog.computing.dcu.ie/data/NTCIR_Lifelog_formal_run_Dataset.zip).
 
 Our [annotations](https://github.com/gorayni/egocentric_photostreams/blob/master/datasets/ntcir/annotations.txt) and [categories](https://github.com/gorayni/egocentric_photostreams/blob/master/datasets/ntcir/categories.txt) are available in the *datasets/ntcir* directory of this repository.
 
